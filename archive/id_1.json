@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "sender": 0,
+  "receiver": 2,
+  "amount": 500,
+  "type": "reward",
+  "date": "2023-06-08T03:15:53.102Z"
+}
