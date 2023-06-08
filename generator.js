@@ -14,5 +14,5 @@ function getRandomReceiver() {
 }
 
 function getRandomAmount() {
-    return Math.floor(Math.random() * 100) + 1;
+    return Math.floor(Math.random() * 700) + 1;
 }

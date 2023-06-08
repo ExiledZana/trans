@@ -2,7 +2,7 @@ const fs = require('fs');
 const { getRandomSender, getRandomReceiver, getRandomAmount } = require('./generator.js');
 
 
-const folderPath = 'C:/Users/дмитрий/Desktop/transactions/archive/';
+const folderPath = './archive/';
 const balanceSheet = {};
 
 
@@ -24,6 +24,11 @@ function writingTrans(folderPath) {
       return;
     }
 
+    if (otpravitel === prinimatel){
+      console.log(`Mr. ${otpravitel}You can not send tokens to yourself`)
+      return;
+    }
+
     else {
       const data = {
         id: fileCount,
@@ -42,6 +47,7 @@ function writingTrans(folderPath) {
           console.error('Error writing to file:', err);
         } else {
           console.log(`Successful operation: ${kolvo} are sent from ${otpravitel} to ${prinimatel}. Comission is ${komissia}.`);
+          console.log(balanceSheet);
         }
       });
 
@@ -96,8 +102,6 @@ function countBalance() {
         
         balanceSheet[i] = currentBalance;
     }
-
-    console.log(balanceSheet);
     return balanceSheet;
         
 }
