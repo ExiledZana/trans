@@ -8,6 +8,7 @@ const balanceSheet = {};
 
 
 function writingTrans(folderPath) {
+    countBalance();
     const fileCount = countFilesInFolder(folderPath);
     const otpravitel = getRandomSender();
     const prinimatel = getRandomReceiver();
@@ -15,27 +16,36 @@ function writingTrans(folderPath) {
     const currentDate = new Date();
     const fileName = `id_${fileCount}.json`;
     const filePath = folderPath + fileName;
+    const komissia = Math.round(kolvo*0.01);
+    const total = kolvo + komissia;
 
-    const data = {
+    if (balanceSheet[otpravitel] < kolvo + komissia){
+      console.log(`${otpravitel}'s balance is too low. Current Balance ${balanceSheet[otpravitel]}. Required amount ${total}`)
+      return;
+    }
+
+    else {
+      const data = {
         id: fileCount,
         sender: otpravitel,
         receiver: prinimatel,
         amount: kolvo,
         type: 'transfer',
-        date: currentDate
-    };
+        date: currentDate,
+        comission: komissia
+      };
 
-    const jsonData = JSON.stringify(data, null, 2);
+      const jsonData = JSON.stringify(data, null, 2);
 
-    fs.writeFile(filePath, jsonData, (err) => {
+      fs.writeFile(filePath, jsonData, (err) => {
         if (err) {
           console.error('Error writing to file:', err);
         } else {
-          console.log(`Data written to ${filePath} successfully.`);
+          console.log(`Successful operation: ${kolvo} are sent from ${otpravitel} to ${prinimatel}. Comission is ${komissia}.`);
         }
       });
 
-};
+}};
 
 function countFilesInFolder(folderPath) {
   try {
@@ -75,6 +85,8 @@ function countBalance() {
                 }
                 if (jsonData.sender === i) {
                   currentBalance -= jsonData.amount;
+                  if (jsonData.hasOwnProperty("comission")){
+                  currentBalance -= jsonData.comission;}
                 }
               } catch (err) {
                 console.error(`Error parsing JSON from file ${filePath}:`, err);
@@ -84,9 +96,11 @@ function countBalance() {
         
         balanceSheet[i] = currentBalance;
     }
+
     console.log(balanceSheet);
+    return balanceSheet;
         
 }
 
-countBalance();
-writingTrans(folderPath);
+//countBalance();
+writingTrans(folderPath)
